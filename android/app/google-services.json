@@ -1,0 +1,42 @@
+{
+  "project_info": {
+    "project_number": "441496906684",
+    "firebase_url": "https://wazimerchant.firebaseio.com",
+    "project_id": "wazimerchant",
+    "storage_bucket": "wazimerchant.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:441496906684:android:776581e03eb5b3d3",
+        "android_client_info": {
+          "package_name": "africa.littlefish.wazimerchant"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "441496906684-83711q9ctaioaudsg53mkr9qufl96vl9.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDUfIQgOyqCQbYeAzafBXYKLoz-JQyLysE"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 1,
+          "other_platform_oauth_client": []
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
