@@ -39,7 +39,6 @@ class AddProduct extends StatelessWidget {
                         splashColor: Theme.of(context).accentColor,
                         child: Text(
                           "ADD",
-                          semanticsLabel: "Add ${state.activeMerchant.name}",
                         ),
                         onPressed: () {},
                       ),

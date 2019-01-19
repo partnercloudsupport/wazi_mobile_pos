@@ -1,0 +1,4 @@
+enum UserOptions {
+  ViewProfile,
+  SignOut
+}

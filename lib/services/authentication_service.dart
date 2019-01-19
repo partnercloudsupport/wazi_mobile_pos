@@ -1,10 +1,25 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:wazi_mobile_pos/common/service_base.dart';
+import 'package:google_sign_in/google_sign_in.dart';
 
 mixin AuthenticationService on ServiceBase {
-  FirebaseUser _authenticatedUser = null;
+  bool _isLoading = false;
+
+  setLoading(bool value) {
+    this._isLoading = value;
+    notifyListeners();
+  }
+
+  bool get isLoading {
+
+    return this._isLoading;
+  }
+
+  FirebaseUser _authenticatedUser;
 
   final FirebaseAuth _auth = FirebaseAuth.instance;
+  final GoogleSignIn _googleSignIn = GoogleSignIn();
+  String _verificationId;
 
   bool isAuthenticating = false;
   bool isRegistering = false;
@@ -17,7 +32,6 @@ mixin AuthenticationService on ServiceBase {
     isAuthenticating = true;
     notifyListeners();
     bool result = false;
-
     await _auth
         .signInWithEmailAndPassword(email: userName, password: password)
         .then((FirebaseUser user) {
@@ -35,6 +49,29 @@ mixin AuthenticationService on ServiceBase {
     });
     notifyListeners();
     return result;
+  }
+
+  Future<bool> loginGoogle() async {
+    isAuthenticating = true;
+    notifyListeners();
+
+    GoogleSignInAccount googleUser = await _googleSignIn.signIn();
+    GoogleSignInAuthentication googleAuth = await googleUser.authentication;
+    FirebaseUser user = await _auth.signInWithGoogle(
+      accessToken: googleAuth.accessToken,
+      idToken: googleAuth.idToken,
+    );
+    this._authenticatedUser = user;
+
+    if (user != null) {
+      print("signed in " + user.displayName);
+      return true;
+    } else
+      return false;
+  }
+
+  void signOut() async {
+    await this._auth.signOut();
   }
 
   Future<bool> registerUser(String email, String password) async {
@@ -61,5 +98,39 @@ mixin AuthenticationService on ServiceBase {
     });
     notifyListeners();
     return result;
+  }
+
+  Future<void> sendCodeToPhone(String mobileNumber) async {
+    final PhoneVerificationCompleted verificationCompleted =
+        (FirebaseUser user) {
+      print(
+          'Inside _sendCodeToPhoneNumber: signInWithPhoneNumber auto succeeded: $user');
+    };
+
+    final PhoneVerificationFailed verificationFailed =
+        (AuthException authException) {
+      print(
+          'Phone number verification failed. Code: ${authException.code}. Message: ${authException.message}');
+    };
+
+    final PhoneCodeSent codeSent =
+        (String verificationId, [int forceResendingToken]) async {
+      _verificationId = verificationId;
+      print("code sent to " + mobileNumber);
+    };
+
+    final PhoneCodeAutoRetrievalTimeout codeAutoRetrievalTimeout =
+        (String verificationId) {
+      _verificationId = verificationId;
+      print("time out");
+    };
+
+    await FirebaseAuth.instance.verifyPhoneNumber(
+        phoneNumber: mobileNumber,
+        timeout: const Duration(seconds: 5),
+        verificationCompleted: verificationCompleted,
+        verificationFailed: verificationFailed,
+        codeSent: codeSent,
+        codeAutoRetrievalTimeout: codeAutoRetrievalTimeout);
   }
 }

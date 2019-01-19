@@ -39,7 +39,6 @@ class AddCustomer extends StatelessWidget {
                         splashColor: Theme.of(context).accentColor,
                         child: Text(
                           "Add Contact",
-                          semanticsLabel: "Add ${state.activeMerchant.name}",
                         ),
                         onPressed: () {},
                       ),
@@ -49,7 +48,6 @@ class AddCustomer extends StatelessWidget {
                         splashColor: Theme.of(context).accentColor,
                         child: Text(
                           "Import Contacts",
-                          semanticsLabel: "Add ${state.activeMerchant.name}",
                         ),
                         onPressed: () {
                           state.setContacts(autoAdd: true);

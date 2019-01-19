@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:scoped_model/scoped_model.dart';
+import 'package:wazi_mobile_pos/models/enums.dart';
+import 'package:wazi_mobile_pos/states/app_state.dart';
 import 'package:wazi_mobile_pos/widgets/circle_logo.dart';
+import 'package:wazi_mobile_pos/widgets/core/main_drawer.dart';
 import 'package:wazi_mobile_pos/widgets/crm/client_list.dart';
-import 'package:wazi_mobile_pos/widgets/general/decorated_text.dart';
 import 'package:wazi_mobile_pos/widgets/merchant/merchant_dashboard.dart';
 import 'package:wazi_mobile_pos/widgets/trade/add_product.dart';
 
@@ -13,30 +16,18 @@ class HomePage extends StatefulWidget {
 }
 
 class HomePageState extends State<HomePage> {
-  int _bottomNavIndex = 0;
+  int _displayIndex = 0;
   String _currentView = "Home";
   GlobalKey<State> _homeKey = GlobalKey<State>();
 
   Widget _getBodyWidget(int index) {
     if (index == 0) {
       {
-        setState(() {
-          this._currentView = "Home";
-        });
-
         return MerchantDashboard();
       }
     } else if (index == 1) {
-      setState(() {
-        this._currentView = "Customers";
-      });
-
       return ClientList();
     } else if (index == 2) {
-      setState(() {
-        this._currentView = "Trade";
-      });
-
       return AddProduct();
     }
 
@@ -44,52 +35,53 @@ class HomePageState extends State<HomePage> {
   }
 
   @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      key: _homeKey,
-      appBar: AppBar(
-        backgroundColor: Theme.of(context).primaryColor,
-        leading: GestureDetector(
-            child: CircleLogo(
-              image: "assets/lf_logo.png",
-              isTransparent: true,
-            ),
-            onTap: () {}),
-        title: Text(_currentView),
-        actions: <Widget>[
-          IconButton(
-            icon: Icon(Icons.person),
-            onPressed: () {},
-          )
-        ],
-        centerTitle: true,
-      ),
-      body: _getBodyWidget(_bottomNavIndex),
-      bottomNavigationBar: BottomNavigationBar(
-          type: BottomNavigationBarType.fixed,
-          onTap: (int index) {
-            setState(() {
-              _bottomNavIndex = index;
+  void initState() {
+    super.initState();
+  }
 
-              //Navigator.pushReplacementNamed(context, '/login');
-            });
-          },
-          currentIndex: _bottomNavIndex,
-          fixedColor: Theme.of(context).primaryColor,
-          items: [
-            BottomNavigationBarItem(
-                icon: Icon(Icons.home), title: Text("Home")),
-            BottomNavigationBarItem(
-                icon: Icon(
-                  Icons.people,
-                  size: 28.0,
-                ),
-                title: Text("Customers")),
-            BottomNavigationBarItem(
-                icon: Icon(Icons.shopping_cart), title: Text("Trade")),
-            BottomNavigationBarItem(
-                icon: Icon(Icons.settings), title: Text("Manage")),
-          ]),
-    );
+  @override
+  Widget build(BuildContext context) {
+    return ScopedModelDescendant<AppState>(
+        builder: (BuildContext context, Widget child, AppState state) {
+      return Scaffold(
+        key: _homeKey,
+        appBar: AppBar(
+          backgroundColor: Theme.of(context).primaryColor,
+          title: Text("Home"),
+          actions: <Widget>[
+            PopupMenuButton(
+              onSelected: (UserOptions option) {
+                switch (option) {
+                  case UserOptions.SignOut:
+                    state.signOut();
+
+                    Navigator.of(context).pushReplacementNamed("/landing");
+                    break;
+                  case UserOptions.ViewProfile:
+                    break;
+                }
+              },
+              icon: Icon(Icons.person),
+              itemBuilder: (BuildContext context) =>
+                  <PopupMenuEntry<UserOptions>>[
+                    const PopupMenuItem<UserOptions>(
+                      value: UserOptions.ViewProfile,
+                      child: Text('View Profile'),
+                    ),
+                    const PopupMenuItem<UserOptions>(
+                      value: UserOptions.SignOut,
+                      child: Text('Sign Out'),
+                    ),
+                  ],
+            )
+          ],
+          centerTitle: true,
+        ),
+        drawer: MainDrawer(
+          startingIndex: 0,
+        ),
+        body: _getBodyWidget(_displayIndex),
+      );
+    });
   }
 }

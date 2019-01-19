@@ -17,6 +17,7 @@ mixin ClientService on ServiceBase {
   List<Client> _clients;
   Iterable<Contact> _contacts;
   bool _isBusy;
+  bool _alreadyImported = false;
 
   bool get canRead {
     return this.readStatus == PermissionStatus.authorized;
@@ -100,12 +101,6 @@ mixin ClientService on ServiceBase {
       this.readStatus =
           await SimplePermissions.requestPermission(Permission.ReadContacts);
       print(this.readStatus);
-      // print("requesing read access");
-      // SimplePermissions.requestPermission(Permission.ReadContacts)
-      //     .then((PermissionStatus value) {
-      //   this.readStatus = value;
-      //   notifyListeners();
-      // });
     }
   }
 
@@ -117,10 +112,13 @@ mixin ClientService on ServiceBase {
   void setContacts({bool autoAdd = false}) async {
     print('start setContacts()');
 
-    if (autoAdd && this.contacts != null && this.contacts.length > 0) {
-      this.addContacts(this.contacts);
-      notifyListeners();
-      return;
+    if (!_alreadyImported) {
+      if (autoAdd && this.contacts != null && this.contacts.length > 0) {
+        this.addContacts(this.contacts);
+        notifyListeners();
+        _alreadyImported = true;
+        return;
+      }
     }
 
     this.setPermissionStatuses();

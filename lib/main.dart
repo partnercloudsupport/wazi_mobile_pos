@@ -1,8 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:scoped_model/scoped_model.dart';
 import 'package:wazi_mobile_pos/common/utils/hex_color.dart';
+import 'package:wazi_mobile_pos/pages/crm/client.dart';
 import 'package:wazi_mobile_pos/pages/home.dart';
+import 'package:wazi_mobile_pos/pages/landing_page.dart';
 import 'package:wazi_mobile_pos/pages/login.dart';
+import 'package:wazi_mobile_pos/pages/register.dart';
 import 'package:wazi_mobile_pos/states/app_state.dart';
 
 void main() => runApp(MyApp());
@@ -16,16 +19,21 @@ class MyApp extends StatelessWidget {
       child: MaterialApp(
         // debugShowMaterialGrid: true,
         theme: ThemeData(
-          primaryColor: HexColor("#773A95"), //LITTLE PURPLE
-          accentColor: HexColor("#F05623"), //LIGHT ORANGE
+          primaryColor: Colors.teal, //LITTLE PURPLE
+          //accentColor: Colors.blueGrey, //LIGHT ORANGE
+          // accentColor: HexColor("#A64AC9"),
+          accentColor: HexColor("#FBA100"),
           fontFamily: "Oswald",
           backgroundColor: Color.fromRGBO(237, 237, 237, 1.0),
         ),
-
-        home: LoginPage(),
+        home: LandingPage(),
         routes: {
           '/home': (BuildContext context) => HomePage(),
-          '/login': (BuildContext context) => LoginPage()
+          '/login': (BuildContext context) => LoginPage(),
+          '/register': (BuildContext context) => RegisterPage(),
+          '/landing': (BuildContext context) => LandingPage(),
+          '/customers': (BuildContext context) => ClientPage(),
+          
         },
       ),
     );

@@ -26,11 +26,26 @@ dependencies:
   simple_permissions: ^0.1.9
   firebase_core: ^0.2.5  # add dependency for Firebase Core
   firebase_auth: ^0.6.6
+  diagonal: ^1.0.1
+  keyboard_actions: ^1.0.3
+  flutter_swiper: ^1.1.4
+  google_sign_in: ^3.2.4
+  carousel_pro: ^0.0.13
+  cloud_firestore: ^0.8.2+3
+  json_annotation: ^2.0.0
+  uuid: ^1.0.3
+  progress_hud: ^1.1.0
+  localstorage: ^1.0.0
+  image_picker: ^0.4.5
+
+
 
 dev_dependencies:
   flutter_test:
     sdk: flutter
   flutter_launcher_icons: "^0.7.0"
+  build_runner: ^1.0.0
+  json_serializable: ^2.0.0
 
 
 flutter_icons:
@@ -56,8 +71,18 @@ flutter:
     - assets/lf_logo_title.png
     - assets/bg_landscape.jpg
     - assets/bg_portrait.jpg
-    - assets/storeimage.jpg
     - assets/brandon.png
+    - assets/lf_name.png
+    - assets/merchant1.png
+    - assets/pointofsale.png
+    - assets/merchanticon.png
+    - assets/tillpoint.png
+    - assets/tillpoint2.png
+    - assets/inventory.png
+    - assets/customers.png
+    - assets/reporting.png
+    - assets/staffmanagement.png
+
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.io/assets-and-images/#resolution-aware.

@@ -1,13 +1,18 @@
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
 
 class DecoratedText extends StatelessWidget {
   final String displayText;
   final FontWeight fontWeight;
   final double fontSize;
   final Alignment alignment;
+  final Color textColor;
 
   DecoratedText(this.displayText,
-      {this.fontWeight = FontWeight.normal, this.fontSize = 12.0, this.alignment = Alignment.topLeft});
+      {this.fontWeight = FontWeight.normal,
+      this.fontSize = 12.0,
+      this.alignment = Alignment.topLeft,
+      this.textColor = Colors.black});
 
   @override
   Widget build(BuildContext context) {
@@ -20,10 +25,12 @@ class DecoratedText extends StatelessWidget {
         ),
         child: Text(
           displayText,
+          textAlign: TextAlign.center,
           style: TextStyle(
               fontStyle: FontStyle.normal,
               fontWeight: fontWeight,
-              fontSize: this.fontSize),
+              fontSize: this.fontSize,
+              color: textColor),
         ));
   }
 }

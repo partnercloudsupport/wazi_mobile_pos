@@ -7,8 +7,13 @@ class LoadingCircle extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    var targetHeight = MediaQuery.of(context).size.height / 3;
+    var targetWidth = MediaQuery.of(context).size.height * 0.6;
+
     return Center(
         child: SizedBox(
+      height: targetHeight,
+      width: targetWidth,
       child: CircularProgressIndicator(
         semanticsLabel: displayText,
       ),

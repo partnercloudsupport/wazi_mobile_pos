@@ -2,20 +2,28 @@ import 'dart:typed_data';
 
 import 'package:contacts_service/contacts_service.dart';
 import 'package:flutter/material.dart';
+import 'package:json_annotation/json_annotation.dart';
+import 'package:wazi_mobile_pos/models/crm/item_value.dart';
 
+/// This allows the `UserModel` class to access private members in
+/// the generated file. The value for this is *.g.dart, where
+/// the star denotes the source file name.
+part 'client.g.dart';
+
+@JsonSerializable()
 class Client {
-  Client(
-      {this.givenName,
-      this.middleName,
-      this.prefix,
-      this.suffix,
-      this.familyName,
-      this.company,
-      this.jobTitle,
-      this.emails,
-      this.phones,
-      this.avatar,
-      this.iconData});
+  Client({
+    this.givenName,
+    this.middleName,
+    this.prefix,
+    this.suffix,
+    this.familyName,
+    this.company,
+    this.jobTitle,
+    this.emails,
+    this.phones,
+    this.avatar,
+  });
 
   String identifier,
       displayName,
@@ -27,10 +35,9 @@ class Client {
       company,
       jobTitle;
 
-  Iterable<ItemValue> emails = [];
-  Iterable<ItemValue> phones = [];
+  List<String> emails = [];
+  List<String> phones = [];
   Uint8List avatar;
-  IconData iconData;
 
   Client.fromMap(Map m) {
     identifier = m["identifier"];
@@ -42,11 +49,7 @@ class Client {
     suffix = m["suffix"];
     company = m["company"];
     jobTitle = m["jobTitle"];
-    emails = (m["emails"] as Iterable)?.map((m) => ItemValue.fromMap(m));
-    phones = (m["phones"] as Iterable)?.map((m) => ItemValue.fromMap(m));
-
     avatar = m["avatar"];
-    iconData = Icons.verified_user;
   }
 
   Client.fromContact(Contact c) {
@@ -60,46 +63,15 @@ class Client {
     company = c.company;
     jobTitle = c.jobTitle;
     avatar = c.avatar;
-    iconData = Icons.verified_user;
   }
 
-  static Map _toMap(Client contact) {
-    var emails = [];
-    for (ItemValue email in contact.emails ?? []) {
-      emails.add(ItemValue._toMap(email));
-    }
-    var phones = [];
-    for (ItemValue phone in contact.phones ?? []) {
-      phones.add(ItemValue._toMap(phone));
-    }
+  /// A necessary factory constructor for creating a new User instance
+  /// from a map. Pass the map to the generated `_$UserFromJson()` constructor.
+  /// The constructor is named after the source class, in this case User.
+  factory Client.fromJson(Map<String, dynamic> json) => _$ClientFromJson(json);
 
-    return {
-      "identifier": contact.identifier,
-      "displayName": contact.displayName,
-      "givenName": contact.givenName,
-      "middleName": contact.middleName,
-      "familyName": contact.familyName,
-      "prefix": contact.prefix,
-      "suffix": contact.suffix,
-      "company": contact.company,
-      "jobTitle": contact.jobTitle,
-      "emails": emails,
-      "phones": phones,
-      "avatar": contact.avatar
-    };
-  }
-}
-
-/// Item class used for contact fields which only have a [label] and
-/// a [value], such as emails and phone numbers
-class ItemValue {
-  ItemValue({this.label, this.value});
-  String label, value;
-
-  ItemValue.fromMap(Map m) {
-    label = m["label"];
-    value = m["value"];
-  }
-
-  static Map _toMap(ItemValue i) => {"label": i.label, "value": i.value};
+  /// `toJson` is the convention for a class to declare support for serialization
+  /// to JSON. The implementation simply calls the private, generated
+  /// helper method `_$UserToJson`.
+  Map<String, dynamic> toJson() => _$ClientToJson(this);
 }

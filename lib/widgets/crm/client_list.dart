@@ -35,7 +35,7 @@ class ClientListState extends State<ClientList> {
                               : "")),
                   title: Text(c.displayName ?? ""),
                   onTap: () {},
-                  trailing: Icon(c.iconData),
+                  // trailing: Icon(c.iconData),
                 );
               })
           : Center(child: AddCustomer()),

@@ -1,8 +1,5 @@
-import 'package:contacts_service/contacts_service.dart';
 import 'package:flutter/material.dart';
 import 'package:scoped_model/scoped_model.dart';
-import 'package:wazi_mobile_pos/models/crm/client.dart';
-import 'package:wazi_mobile_pos/services/crm/client_service.dart';
 import 'package:wazi_mobile_pos/states/app_state.dart';
 import 'package:wazi_mobile_pos/widgets/general/decorated_text.dart';
 
@@ -15,7 +12,6 @@ class ClientSummaryCard extends StatefulWidget {
 
 class ClientSummaryCardState extends State<ClientSummaryCard> {
   Widget _buildClientsWidget(BuildContext context, AppState state) {
-
 //
     return Row(
       mainAxisAlignment: MainAxisAlignment.center,
@@ -75,7 +71,6 @@ class ClientSummaryCardState extends State<ClientSummaryCard> {
                         splashColor: Theme.of(context).accentColor,
                         child: Text(
                           "View",
-                          semanticsLabel: "View ${state.activeMerchant.name}",
                         ),
                         onPressed: () {},
                       ),
@@ -85,7 +80,6 @@ class ClientSummaryCardState extends State<ClientSummaryCard> {
                         splashColor: Theme.of(context).accentColor,
                         child: Text(
                           "Add",
-                          semanticsLabel: "Add ${state.activeMerchant.name}",
                         ),
                         onPressed: () {},
                       ),
@@ -95,7 +89,6 @@ class ClientSummaryCardState extends State<ClientSummaryCard> {
                         splashColor: Theme.of(context).accentColor,
                         child: Text(
                           "Refresh",
-                          semanticsLabel: "Add ${state.activeMerchant.name}",
                         ),
                         onPressed: () {
                           state.refreshClients();

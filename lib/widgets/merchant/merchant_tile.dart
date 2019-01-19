@@ -1,34 +1,46 @@
 import 'package:flutter/material.dart';
 import 'package:scoped_model/scoped_model.dart';
+import 'package:wazi_mobile_pos/models/merchant/merchant_model.dart';
 
 import 'package:wazi_mobile_pos/states/app_state.dart';
 import 'package:wazi_mobile_pos/widgets/general/decorated_text.dart';
 import 'package:wazi_mobile_pos/widgets/general/long_text.dart';
 import 'package:wazi_mobile_pos/widgets/general/text_tag.dart';
-import 'package:wazi_mobile_pos/widgets/rectangle_image.dart';
 
 class MerchantTile extends StatelessWidget {
   static const double height = 368.0;
 
   Widget _getStoreDetails(AppState state, BuildContext context) {
-    return Column(
-      mainAxisAlignment: MainAxisAlignment.start,
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: <Widget>[
-        Row(children: <Widget>[
-          DecoratedText(
-            state.activeMerchant.name,
-            fontSize: 18.0,
-            fontWeight: FontWeight.bold,
-          ),
-          TextTag(displayText: state.activeMerchant.primaryBusiness)
-        ]),
-        LongText(state.activeMerchant.description),
-        DecoratedText(
-          "Trading Hours : " + state.activeMerchant.operatingHours,
-          alignment: Alignment.bottomRight,
-        ),
-      ],
+    return FutureBuilder(
+      future: state.merchantService.getActiveMerchant(),
+      builder: (BuildContext context, AsyncSnapshot<MerchantModel> snapshot) {
+        if (!snapshot.hasData) {
+          return CircularProgressIndicator();
+        } else {
+          return Column(
+            mainAxisAlignment: MainAxisAlignment.start,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: <Widget>[
+              Row(children: <Widget>[
+                DecoratedText(
+                  state.merchantService.activeMerchant.name,
+                  fontSize: 18.0,
+                  fontWeight: FontWeight.bold,
+                ),
+                TextTag(
+                    displayText:
+                        state.merchantService.activeMerchant.primaryBusiness)
+              ]),
+              LongText(state.merchantService.activeMerchant.description),
+              DecoratedText(
+                "Trading Hours : " +
+                    state.merchantService.activeMerchant.operatingHours,
+                alignment: Alignment.bottomRight,
+              ),
+            ],
+          );
+        }
+      },
     );
   }
 
@@ -50,10 +62,14 @@ class MerchantTile extends StatelessWidget {
                   child: Stack(
                     children: <Widget>[
                       Positioned.fill(
-                        child: Image.asset(
-                          state.activeMerchant.storeImage,
-                          fit: BoxFit.cover,
-                        ),
+                        child: state.merchantService.activeMerchant
+                                    .storeImage ==
+                                null
+                            ? Text("Missing Image")
+                            : Image.asset(
+                                state.merchantService.activeMerchant.storeImage,
+                                fit: BoxFit.cover,
+                              ),
                       )
                     ],
                   ),
@@ -74,7 +90,8 @@ class MerchantTile extends StatelessWidget {
                         splashColor: Theme.of(context).accentColor,
                         child: Text(
                           "VIEW",
-                          semanticsLabel: "View ${state.activeMerchant.name}",
+                          semanticsLabel:
+                              "View ${state.merchantService.activeMerchant.name}",
                         ),
                         onPressed: () {},
                       ),
