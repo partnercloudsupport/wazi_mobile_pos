@@ -1,9 +1,7 @@
 import 'dart:typed_data';
 
 import 'package:contacts_service/contacts_service.dart';
-import 'package:flutter/material.dart';
 import 'package:json_annotation/json_annotation.dart';
-import 'package:wazi_mobile_pos/models/crm/item_value.dart';
 
 /// This allows the `UserModel` class to access private members in
 /// the generated file. The value for this is *.g.dart, where
@@ -12,18 +10,21 @@ part 'client.g.dart';
 
 @JsonSerializable()
 class Client {
-  Client({
-    this.givenName,
-    this.middleName,
-    this.prefix,
-    this.suffix,
-    this.familyName,
-    this.company,
-    this.jobTitle,
-    this.emails,
-    this.phones,
-    this.avatar,
-  });
+  Client(
+      {this.givenName,
+      this.middleName,
+      this.prefix,
+      this.suffix,
+      this.familyName,
+      this.company,
+      this.jobTitle,
+      this.emails,
+      this.phones,
+      this.avatar,
+      this.merchantId,
+      this.isFavorite,
+      this.createDate,
+      this.documentID});
 
   String identifier,
       displayName,
@@ -33,10 +34,17 @@ class Client {
       suffix,
       familyName,
       company,
-      jobTitle;
+      jobTitle,
+      merchantId,
+      documentID;
+
+  bool isFavorite;
+  DateTime createDate;
 
   List<String> emails = [];
   List<String> phones = [];
+  List<String> images = [];
+
   Uint8List avatar;
 
   Client.fromMap(Map m) {

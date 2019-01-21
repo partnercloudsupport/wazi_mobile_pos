@@ -37,6 +37,12 @@ dependencies:
   progress_hud: ^1.1.0
   localstorage: ^1.0.0
   image_picker: ^0.4.5
+  firebase_storage: ^1.0.4
+  flutter_image_compress: ^0.2.3
+  path_provider: ^0.4.1
+  intl: ^0.15.7
+  flutter_launcher_icons: "^0.6.1"
+
 
 
 
@@ -49,10 +55,10 @@ dev_dependencies:
 
 
 flutter_icons:
-  android: "launcher_icon" 
+  image_path: "icon/icon.png" 
+  android: true
   ios: true
-  image_path: "assets/lf_logo.png"
-
+  
 # For information on the generic Dart part of this file, see the
 # following page: https://www.dartlang.org/tools/pub/pubspec
 
@@ -69,7 +75,6 @@ flutter:
     - assets/lf_logo.png
     - assets/logo.png
     - assets/lf_logo_title.png
-    - assets/bg_landscape.jpg
     - assets/bg_portrait.jpg
     - assets/brandon.png
     - assets/lf_name.png

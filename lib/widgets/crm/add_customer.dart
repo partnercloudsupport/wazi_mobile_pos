@@ -50,8 +50,8 @@ class AddCustomer extends StatelessWidget {
                           "Import Contacts",
                         ),
                         onPressed: () {
-                          state.setContacts(autoAdd: true);
-                          state.addContacts(state.contacts);
+                          // state.setContacts(autoAdd: true);
+                          // state.addContacts(state.contacts);
                         },
                       )
                     ],

@@ -1,11 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:scoped_model/scoped_model.dart';
 import 'package:wazi_mobile_pos/common/utils/hex_color.dart';
-import 'package:wazi_mobile_pos/pages/crm/client.dart';
+import 'package:wazi_mobile_pos/pages/checkout/checkout_page.dart';
+import 'package:wazi_mobile_pos/pages/crm/client_page.dart';
 import 'package:wazi_mobile_pos/pages/home.dart';
+import 'package:wazi_mobile_pos/pages/inventory/inventory_page.dart';
 import 'package:wazi_mobile_pos/pages/landing_page.dart';
 import 'package:wazi_mobile_pos/pages/login.dart';
 import 'package:wazi_mobile_pos/pages/register.dart';
+import 'package:wazi_mobile_pos/pages/settings/settings_page.dart';
 import 'package:wazi_mobile_pos/states/app_state.dart';
 
 void main() => runApp(MyApp());
@@ -33,7 +36,9 @@ class MyApp extends StatelessWidget {
           '/register': (BuildContext context) => RegisterPage(),
           '/landing': (BuildContext context) => LandingPage(),
           '/customers': (BuildContext context) => ClientPage(),
-          
+          '/inventory': (BuildContext context) => InventoryPage(),
+          '/settings': (BuildContext context) => SettingsPage(),
+          "/checkout": (BuildContext context) => CheckoutPage()
         },
       ),
     );

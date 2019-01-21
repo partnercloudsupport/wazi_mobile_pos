@@ -1,17 +1,18 @@
 import 'package:flutter/material.dart';
 import 'package:scoped_model/scoped_model.dart';
 import 'package:wazi_mobile_pos/common/service_base.dart';
-
-import 'package:wazi_mobile_pos/services/product_service.dart';
+import 'package:wazi_mobile_pos/services/checkout/transaction_service.dart';
+import 'package:wazi_mobile_pos/services/inventory/inventory_service.dart';
 import 'package:wazi_mobile_pos/services/authentication_service.dart';
-import 'package:wazi_mobile_pos/services/crm/client_service.dart';
 import 'package:wazi_mobile_pos/services/system/customer_service.dart';
 import 'package:wazi_mobile_pos/services/system/merchant_service.dart';
 import 'package:wazi_mobile_pos/services/system/user_service.dart';
+import 'package:wazi_mobile_pos/tools/filemanager.dart';
 import 'package:wazi_mobile_pos/widgets/general/generic_form.dart';
+import 'package:wazi_mobile_pos/services/checkout/shopping_cart_service.dart';
 
 class AppState extends Model
-    with ServiceBase, ProductService, AuthenticationService, ClientService {
+    with ServiceBase, ShoppingCartService, AuthenticationService {
   UserService _userService;
   UserService get userService {
     if (null == _userService) _userService = UserService(this);
@@ -33,6 +34,29 @@ class AppState extends Model
     if (null == _customerService) _customerService = CustomerService(this);
 
     return _customerService;
+  }
+
+  InventoryService _inventoryService;
+
+  InventoryService get inventoryService {
+    if (null == _inventoryService) _inventoryService = InventoryService(this);
+
+    return _inventoryService;
+  }
+
+  FileManager _fileManager;
+
+  FileManager get fileManager {
+    if (null == _fileManager) _fileManager = FileManager();
+    return _fileManager;
+  }
+
+  TransactionService _transactionService;
+
+  TransactionService get transactionService {
+    if (null == _transactionService) _transactionService = TransactionService();
+
+    return _transactionService;
   }
 
   List<FormModel> forms;

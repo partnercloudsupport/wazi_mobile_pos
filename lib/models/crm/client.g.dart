@@ -17,9 +17,16 @@ Client _$ClientFromJson(Map<String, dynamic> json) {
       jobTitle: json['jobTitle'] as String,
       emails: (json['emails'] as List)?.map((e) => e as String)?.toList(),
       phones: (json['phones'] as List)?.map((e) => e as String)?.toList(),
-      avatar: (json['avatar'] as List)?.map((e) => e as int)?.toList())
+      avatar: (json['avatar'] as List)?.map((e) => e as int)?.toList(),
+      merchantId: json['merchantId'] as String,
+      isFavorite: json['isFavorite'] as bool,
+      createDate: json['createDate'] == null
+          ? null
+          : DateTime.parse(json['createDate'] as String),
+      documentID: json['documentID'] as String)
     ..identifier = json['identifier'] as String
-    ..displayName = json['displayName'] as String;
+    ..displayName = json['displayName'] as String
+    ..images = (json['images'] as List)?.map((e) => e as String)?.toList();
 }
 
 Map<String, dynamic> _$ClientToJson(Client instance) => <String, dynamic>{
@@ -32,7 +39,12 @@ Map<String, dynamic> _$ClientToJson(Client instance) => <String, dynamic>{
       'familyName': instance.familyName,
       'company': instance.company,
       'jobTitle': instance.jobTitle,
+      'merchantId': instance.merchantId,
+      'documentID': instance.documentID,
+      'isFavorite': instance.isFavorite,
+      'createDate': instance.createDate?.toIso8601String(),
       'emails': instance.emails,
       'phones': instance.phones,
+      'images': instance.images,
       'avatar': instance.avatar
     };

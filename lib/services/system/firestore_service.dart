@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+
 import 'package:meta/meta.dart';
 
 class FireStoreService {
@@ -25,7 +26,7 @@ class FireStoreService {
           .add(item)
           .then((DocumentReference doc) {
             if (doc != null) {
-              print("document saved hooray");
+              print("document saved hoorays");
               result = doc.documentID;
             }
           })
@@ -45,6 +46,25 @@ class FireStoreService {
     List<DocumentSnapshot> docs = queryResult.documents;
     if (docs == null || docs.length == 0) return null;
     return docs.first.data;
+  }
+
+  Future<List<DocumentSnapshot>> getObjects(
+      String collectionName, Map<String, dynamic> criteria) async {
+    QuerySnapshot queryResult = await _store
+        .collection(collectionName)
+        .where(criteria["field"], isEqualTo: criteria["value"])
+        .getDocuments();
+    List<DocumentSnapshot> docs = queryResult.documents;
+    if (docs == null || docs.length == 0) return null;
+    return docs;
+  }
+
+  Future<List<DocumentSnapshot>> getAllObjects(String collectionName) async {
+    QuerySnapshot queryResult =
+        await _store.collection(collectionName).getDocuments();
+    List<DocumentSnapshot> docs = queryResult.documents;
+    if (docs == null || docs.length == 0) return null;
+    return docs;
   }
 }
 

@@ -1,11 +1,11 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
+import 'package:uuid/uuid.dart';
 import 'package:wazi_mobile_pos/models/crm/client.dart';
-import 'package:wazi_mobile_pos/models/crm/item_value.dart';
+import 'package:wazi_mobile_pos/services/system/firestoreobject_service.dart';
 import 'package:wazi_mobile_pos/states/app_state.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:wazi_mobile_pos/widgets/core/main_drawer.dart';
 import 'package:wazi_mobile_pos/widgets/general/decorated_text.dart';
 
 class ClientAddPage extends StatefulWidget {
@@ -39,11 +39,10 @@ class ClientAddPageState extends State<ClientAddPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text("Add Customer"),
+        title: Text("New Customer"),
         centerTitle: true,
         backgroundColor: Theme.of(context).primaryColor,
       ),
-      
       body: _buildStateBody(context),
     );
   }
@@ -54,40 +53,44 @@ class ClientAddPageState extends State<ClientAddPage> {
         return _buildStepper(context);
       case CustomerAddState.saved:
         return AnimatedContainer(
-          height: MediaQuery.of(context).size.height * 0.4,
-          width: MediaQuery.of(context).size.width * 0.8,
           alignment: Alignment.center,
-          decoration: BoxDecoration(
-            color: Theme.of(context).accentColor.withOpacity(0.3),
-            borderRadius: BorderRadius.circular(12.0),
-          ),
-          margin: EdgeInsets.all(8.0),
           child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
             crossAxisAlignment: CrossAxisAlignment.center,
+            mainAxisAlignment: MainAxisAlignment.center,
             children: <Widget>[
-              DecoratedText(
-                "Congratulations!",
-                textColor: Theme.of(context).primaryColor,
-                alignment: Alignment.center,
-                fontSize: 36.0,
+              Text(
+                "${_currentClient.displayName} saved successfully!",
+                style: TextStyle(fontSize: 36.0),
+                textAlign: TextAlign.center,
               ),
-              DecoratedText(
-                "${_currentClient.givenName} has been saved succesfully",
-                textColor: Theme.of(context).primaryColor,
-                alignment: Alignment.center,
-                fontSize: 24.0,
+              SizedBox(
+                height: 16.0,
               ),
-              RaisedButton(
-                child: Text("Ok"),
-                onPressed: () {
-                  Navigator.pop(context);
-                },
+              Text(
+                "please tap on the circle to continue",
+                style: TextStyle(fontSize: 14.0),
+              ),
+              SizedBox(
+                height: 8.0,
+              ),
+              CircleAvatar(
+                minRadius: 64.0,
+                backgroundColor: Theme.of(context).primaryColor,
+                child: IconButton(
+                  icon: Icon(Icons.check),
+                  iconSize: 64.0,
+                  color: Colors.white,
+                  onPressed: () {
+                    Navigator.pop(context);
+                  },
+                  splashColor: Theme.of(context).accentColor,
+                ),
               )
             ],
           ),
           duration: Duration(seconds: 3),
         );
+
         break;
       case CustomerAddState.saving:
         return Center(
@@ -99,6 +102,19 @@ class ClientAddPageState extends State<ClientAddPage> {
     }
 
     return null;
+  }
+
+  void _showSnackBar(BuildContext context) {
+    Scaffold.of(context).showSnackBar(
+      SnackBar(
+        content: Text("Saved successfully"),
+        duration: Duration(seconds: 3),
+        action: SnackBarAction(
+          label: "Ok",
+          onPressed: () {},
+        ),
+      ),
+    );
   }
 
   Widget _buildStepper(BuildContext context) {
@@ -152,9 +168,9 @@ class ClientAddPageState extends State<ClientAddPage> {
             }
             break;
           case 2: //Take a selfie
-            if (_pictureFile != null)
+            if (_pictureFile != null) {
               mayproceed = true;
-            else
+            } else
               mayproceed = false;
             break;
         }
@@ -164,6 +180,8 @@ class ClientAddPageState extends State<ClientAddPage> {
           print("about to save customer..");
           _saveCustomer().then((bool result) {
             if (result) {
+              //now we need to save the picture...
+
               setState(() {
                 _currentState = CustomerAddState.saved;
               });
@@ -189,8 +207,21 @@ class ClientAddPageState extends State<ClientAddPage> {
       _currentState = CustomerAddState.saving;
     });
 
-    var result =
-        await widget.state.customerService.saveCustomer(_currentClient);
+    //we need to first save the profile picture in object storage
+    FirestoreObjectService objectStorage = FirestoreObjectService();
+    var uploadResult = await objectStorage.uploadFile(_pictureFile,
+        folder: "customers", category: "profilepictures");
+
+    var uploadPath = await uploadResult.ref.getPath();
+
+    var downloadUrl = await objectStorage.getDownloadUrl(fullpath: uploadPath);
+
+    _currentClient.images = [uploadPath, downloadUrl, _pictureFile.path];
+
+    //we also need to write a file to local disc hey... no kidding
+
+    var result = await widget.state.customerService
+        .saveCustomer(_currentClient, widget.state);
 
     return result;
   }
@@ -364,7 +395,9 @@ class ClientAddPageState extends State<ClientAddPage> {
               child: RaisedButton(
                 child: Text("Take Photo"),
                 onPressed: () {
-                  _openCamera().then((File picture) {
+                  widget.state.fileManager
+                      .getCameraImage(compress: true, maxSizeKb: 1250.0)
+                      .then((picture) {
                     if (picture != null) {
                       print(picture.uri);
                       setState(() {
@@ -386,7 +419,9 @@ class ClientAddPageState extends State<ClientAddPage> {
               child: RaisedButton(
                 child: Text("Upload Photo"),
                 onPressed: () {
-                  _openGallery().then((File picture) {
+                  widget.state.fileManager
+                      .getGalleryImage(compress: true, maxSizeKb: 1250.0)
+                      .then((picture) {
                     if (picture != null) {
                       print(picture.uri);
                       setState(() {

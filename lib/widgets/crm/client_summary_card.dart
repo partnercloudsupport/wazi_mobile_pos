@@ -20,7 +20,7 @@ class ClientSummaryCardState extends State<ClientSummaryCard> {
         Column(
           children: <Widget>[
             DecoratedText(
-              "${state.clients == null ? "0" : state.clients.length.toString()} Customers",
+              "to be replaced with something meaningul customers",
               alignment: Alignment.center,
               fontSize: 18.0,
             ),
@@ -91,8 +91,8 @@ class ClientSummaryCardState extends State<ClientSummaryCard> {
                           "Refresh",
                         ),
                         onPressed: () {
-                          state.refreshClients();
-                          state.refreshContacts();
+                          // state.refreshClients();
+                          // state.refreshContacts();
                         },
                       )
                     ],

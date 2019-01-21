@@ -11,7 +11,6 @@ mixin AuthenticationService on ServiceBase {
   }
 
   bool get isLoading {
-
     return this._isLoading;
   }
 
@@ -20,11 +19,20 @@ mixin AuthenticationService on ServiceBase {
   final FirebaseAuth _auth = FirebaseAuth.instance;
   final GoogleSignIn _googleSignIn = GoogleSignIn();
   String _verificationId;
-
   bool isAuthenticating = false;
   bool isRegistering = false;
 
   FirebaseUser get authenticatedUser {
+    return this._authenticatedUser;
+  }
+
+  Future<FirebaseUser> getAuthenticatedUser() async {
+    if (this._authenticatedUser == null) {
+      var currentUser = await _auth.currentUser();
+      this._authenticatedUser = currentUser;
+      notifyListeners();
+    }
+
     return this._authenticatedUser;
   }
 

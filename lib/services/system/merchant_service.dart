@@ -35,7 +35,7 @@ class MerchantService extends Model {
     return false;
   }
 
-  Future<MerchantModel> setActiveMerchant(UserModel user) async {
+  Future<MerchantModel> setActiveMerchant(UserModel user, AppState state) async {
     if (null != user) {
       var result = await FireStoreService().getObject(
           "merchants", {"field": "id", "value": "${user.merchantId}"});
@@ -51,18 +51,23 @@ class MerchantService extends Model {
     return null;
   }
 
-  Future<MerchantModel> getActiveMerchant() async {
+  Future<MerchantModel> getActiveMerchant(AppState state) async {
     if (this._activeMerchant != null) return this._activeMerchant;
 
+    var activeUser = await state.userService.getActiveUser(state);
+    var result = await setActiveMerchant(activeUser, state);
+
+    return result;
+
     //it is null, so we must look in local storage first to see if there is anything...
-    var storageResult = await _localStorageService.getObject();
-    if (null != storageResult) {
-      //we load from storage result
-      var storedMerchant =
-          MerchantModel.fromJson((storageResult as Map<String, dynamic>));
-      this._activeMerchant = storedMerchant;
-      return this._activeMerchant;
-    }
-    return null;
+    // var storageResult = await _localStorageService.getObject();
+    // if (null != storageResult) {
+    //   //we load from storage result
+    //   var storedMerchant =
+    //       MerchantModel.fromJson((storageResult as Map<String, dynamic>));
+    //   this._activeMerchant = storedMerchant;
+    //   return this._activeMerchant;
+    // }
+    // return null;
   }
 }

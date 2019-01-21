@@ -57,6 +57,34 @@ class UserService extends Model {
     return null;
   }
 
+  Future<UserModel> getActiveUser(AppState state) async {
+    var dummyUser = UserModel(
+        name: "test",
+        email: "test",
+        lastname: "test",
+        phoneNumber: "tests",
+        registeredDate: DateTime.now(),
+        role: UserRole.employee);
+
+    if (null != this._activeUser) return this._activeUser;
+
+    var thisUser = await state.getAuthenticatedUser();
+    if (thisUser == null) return dummyUser;
+
+    if (null != thisUser) {
+      var result = await FireStoreService()
+          .getObject("users", {"field": "userId", "value": thisUser.uid});
+
+      if (result != null) {
+        var thisUser = UserModel.fromJson(result);
+        this._activeUser = thisUser;
+        return activeUser;
+      } else
+        return dummyUser;
+    }
+    return dummyUser;
+  }
+
   void setActiveUser(UserModel user) {
     if (user != null) this._activeUser = user;
   }

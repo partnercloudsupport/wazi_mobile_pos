@@ -12,7 +12,7 @@ class MerchantTile extends StatelessWidget {
 
   Widget _getStoreDetails(AppState state, BuildContext context) {
     return FutureBuilder(
-      future: state.merchantService.getActiveMerchant(),
+      future: state.merchantService.getActiveMerchant(state),
       builder: (BuildContext context, AsyncSnapshot<MerchantModel> snapshot) {
         if (!snapshot.hasData) {
           return CircularProgressIndicator();
@@ -23,18 +23,15 @@ class MerchantTile extends StatelessWidget {
             children: <Widget>[
               Row(children: <Widget>[
                 DecoratedText(
-                  state.merchantService.activeMerchant.name,
+                  snapshot.data.name,
                   fontSize: 18.0,
                   fontWeight: FontWeight.bold,
                 ),
-                TextTag(
-                    displayText:
-                        state.merchantService.activeMerchant.primaryBusiness)
+                TextTag(displayText: snapshot.data.primaryBusiness)
               ]),
-              LongText(state.merchantService.activeMerchant.description),
+              LongText(snapshot.data.description),
               DecoratedText(
-                "Trading Hours : " +
-                    state.merchantService.activeMerchant.operatingHours,
+                "Trading Hours : " + snapshot.data.operatingHours,
                 alignment: Alignment.bottomRight,
               ),
             ],

@@ -157,7 +157,7 @@ class _LoginPageState extends State<LoginPage> {
   Future<bool> setActiveContent(AppState appState) async {
     await appState.userService.loadActiveUser(appState.authenticatedUser.uid);
     await appState.merchantService
-        .setActiveMerchant(appState.userService.activeUser);
+        .setActiveMerchant(appState.userService.activeUser, appState);
 
     return true;
   }
